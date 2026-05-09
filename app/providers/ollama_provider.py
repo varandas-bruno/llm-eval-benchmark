@@ -1,6 +1,7 @@
 import ollama
 from config import settings
 from base import BaseProvider
+import logging
 
 class OllamaProvider(BaseProvider):         # Inherit from BaseProvider
     
@@ -8,6 +9,8 @@ class OllamaProvider(BaseProvider):         # Inherit from BaseProvider
         # both from config file
         self.model = settings.ollama_model
         self.base_url = settings.ollama_base_url
+        self.logger = logging.getLogger(__name__)
+        
         
     def generate(self, prompt:str) -> str:
         '''
@@ -22,13 +25,18 @@ class OllamaProvider(BaseProvider):         # Inherit from BaseProvider
             response = ollama.chat(
                 model=self.model,
                 messages=[{
-                    "role":"system",
+                    "role":"user",
                     "content":prompt
                 }]
             )
+            
+            self.logger.info(f"Ollama API response: {response}")
+            
+            return response["message"]["content"]
+        
         except Exception as e:
-            print(f"Error calling Ollama API: {e}")
+            self.logger.error(f"Error calling Ollama API: {e}")
             return "Error: Unable to get response from Ollama API."
         
-        return response["message"]["content"]
+        
     
