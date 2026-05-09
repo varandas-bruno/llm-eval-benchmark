@@ -12,5 +12,4 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"                       # tells pydantic where the .env file is
         
-
 settings = Settings()
