@@ -1,12 +1,16 @@
 from openai import OpenAI
 from config import settings
+from base import BaseProvider
+import logging
 
-class OpenAIProvider:
+class OpenAIProvider(BaseProvider):
     
     def __init__(self):
         
         self.model = settings.openai_model
         self.api_key = settings.openai_api_key
+        self.logger = logging.getLogger(__name__)
+        
         
     def generate(self, prompt:str) -> str:
         '''
@@ -23,8 +27,10 @@ class OpenAIProvider:
                 model=self.model,
                 input=prompt
             )
-        except Exception as e:
-            print(f"Error calling OpenAI API: {e}")
-            return "Error: Unable to get response from OpenAI API."
+            
+            self.logger.info(f"OpenAI API response: {response}")
+            return response.output_text
         
-        return response.output_text
+        except Exception as e:
+            self.logger.error(f"Error calling OpenAI API: {e}")
+            return "Error: Unable to get response from OpenAI API."
