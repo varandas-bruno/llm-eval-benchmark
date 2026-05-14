@@ -7,10 +7,10 @@ class EvaluationRequest(BaseModel):
     rag: bool = False
     llm_response: str
     retrieved_chunks: Optional[list[str]]
-    ground_truth: str
+    ground_truth: Optional[str]
     
 class MetricResult(BaseModel):
-    score: float
+    score: Optional[float] = None
     reasoning: str
     
     
@@ -32,6 +32,6 @@ class EvaluationResponse(BaseModel):
     provider: str
     rag: bool
     metrics: MetricBreakdown
-    overall_score: float
-    final_score_pct: str
+    overall_score: str
+    overall_score_reasoning: str
     
